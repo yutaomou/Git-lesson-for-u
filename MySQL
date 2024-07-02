@@ -1,0 +1,91 @@
+insert into emp (id, workno, name, gender, age, idcard, workaddress, entrydate)
+values (1, '1', 'Muller', '男', '19', '123456789', '北京', '2000-01-01'),
+       (2, '2', 'Rong', '男', '19', '123456786', '北京', '2000-01-01'),
+       (3, '3', 'Daniel', '男', '19', '123456787', '北京', '2000-01-01'),
+       (4, '4', 'Joey', '男', '19', '123456789', '北京', '2000-01-01');
+
+update emp set name ='' where id = 1;
+update emp set name = '',gender = '' where id = 1;
+update emp set name = '';
+delete from emp where gender = '';
+delete from emp;
+
+select name, workno from emp;
+select distinct workaddress from emp;
+select count(emp.idcard) from emp;
+select avg(age) from emp;
+select max(age) from emp;
+
+#分组查询
+select emp.gender, count(*) from emp group by gender;
+select emp.gender, avg(age) from emp group by gender;
+select workaddress, count(*) from emp where age <45 group by workaddress having count(*) >= 3;
+
+#排序
+select * from emp order by age ;
+select * from emp order by age desc ;
+select * from emp order by age, entrydate desc ;
+
+#分页查询
+select * from emp limit 0,10;
+select * from emp limit 10, 10;
+
+
+
+
+
+select * from emp where gender = '男' and age between 20 and 40 and name like '%';
+select emp.gender, count(*) from emp where age < 60 group by emp.gender ;
+select * from emp where gender = '男' and age between 20 and 40 order by age, entrydate desc limit 5;
+
+#编写顺序select-from-where-group by-having-order by-limit
+#执行顺序from-where-group by-having-select-order by-limit
+
+#函数
+select concat('hello','world');
+select lower('HELLO');
+select lpad('01',5,'-');
+select rpad('01',5,'-');
+select trim('hello Mysql');#去除头部和尾部的空格
+select substring('Hello World',1,5);
+
+#数值函数
+select ceil(1.5);
+select floor(1);
+select mod(7,4);
+select rand();
+select round(2.345,2);#四舍五入
+
+select lpad(round((rand()*1000000),0),6,'0');#生成验证码
+
+#日期函数
+select curdate();
+select curtime();
+select now();
+select year(now());
+select month(now());
+select date_add(now(),interval 70 day );
+select datediff('2021-12-01','2032-01-02');
+
+#流程控制函数
+select if(true,1,0);
+select ifnull(null,'ok');
+
+select
+    name,
+    (case workaddrss when 'beijing' then 'capital'else 'city'end) as 'workaddress'
+from emp;
+
+#约束
+create table user(
+    id int primary key auto_increment comment '主键',
+    name varchar(10) not null unique comment '姓名',
+    age int check ( age>0 && age<100 ) comment '年龄',
+    status char(1) default '1' comment '状态',
+    gender char(1) comment '性别'
+) comment '用户表';
+
+#外键约束
+#添加外键
+alter table emp add constraint fk_emp_dept_id foreign key (id) references user(id);
+alter table emp drop foreign key fk_emp_dept_id;
