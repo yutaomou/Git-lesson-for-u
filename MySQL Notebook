@@ -201,3 +201,8 @@ rollback;#一但程序运行失败，则回滚事务
                           #1.加锁：加锁后，一个事务只能读取一个事务已经提交的数据，不能读取未提交的数据
                           #2.版本号：一个事务读取了另一个事务已经提交的数据，但是这个数据被另一个事务更新了，则版本号+1
                           #3.行锁：一个事务读取了另一个事务已经提交的数据，但是这个数据被另一个事务更新了，则更新数据时，先锁定数据，再更新数据
+                          #隔离级别逐渐增高 性能逐渐降低
+select @@transaction_isolation;#默认隔离级别为repeatable read
+set session transaction isolation level repeatable read;#设置隔离级别为可重复读
+set session transaction_isolation = 'serializable';#设置隔离级别为串行化
+
